@@ -53,120 +53,106 @@
 </template>
 
 <script lang="ts" setup>
-
 import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
-import { Skill } from '@/composables/Skill';
-import { Posting } from '@/composables/Posting';
+import { Skill } from '../../composables/Skill';
+import { Posting } from '../../composables/Posting';
 
-    const skillCountLimit = 10;
+const skillCountLimit = 10;
+const baseURL = process.env.VUE_APP_BASE_URL || '';
+const skills = ref<{ [key: string]: Skill }>({});
+const postings = ref<{ [key: string]: Posting }>({});
+const selectedScores = ref<{ [key: string]: number }>({});
+const selectedSkillsCount = ref(0);
+const showAllSkills = ref(false);
 
-    const baseURL = process.env.VUE_APP_BASE_URL || '';
-    const skills = ref<{ [key: string]: Skill }>({});
-    const postings = ref<Posting[]>([]);
-    const selectedScores = ref<{ [key: string]: number }>({});
-    const selectedSkillsCount = ref(0);
-    const showAllSkills = ref(false);
-
-    const fetchSkills = () => {
-      axios
-        .get(`${baseURL}/skills`)
-        .then(response => {
-          skills.value = response.data;
-        })
-        .catch(error => {
-          console.error('Error fetching skills:', error);
-        });
-    };
-
-    const fetchPostings = () => {
-      const queryParams = Object.entries(selectedScores.value)
-        .map(([key, value]) => `skill[${encodeURIComponent(key)}]=${encodeURIComponent(value)}`)
-        .join('&');
-
-      const endpoint = `/postings/search/skills?${queryParams}`;
-      axios
-        .get(`${baseURL}${endpoint}`)
-        .then(response => {
-          postings.value = response.data.results;
-        })
-        .catch(error => {
-          console.error('Error fetching postings:', error);
-        });
-    };
-
-    const selectSkill = (slug: string, score: number) => {
-      if (selectedSkillsCount.value >= skillCountLimit) {
-        alert('You can only select up to 10 items from the skills box.');
-        return;
-      }
-      selectedScores.value[slug] = score;
-      selectedSkillsCount.value++;
-      fetchPostings();
-    };
-
-    const toggleSkillsView = (showAll: boolean) => {
-      showAllSkills.value = showAll;
-    };
-
-    const isSelected = (slug: string, score: number) => selectedScores.value[slug] === score;
-
-    const displayedSkills = computed(() => {
-      const skillsArray = Object.values(skills.value);
-      return showAllSkills.value ? skillsArray : skillsArray.slice(0, 5);
+const fetchSkills = () => {
+  axios.get(`${baseURL}/skills`)
+    .then(response => {
+      skills.value = response.data;
+    })
+.catch(error => {
+      console.error('Error fetching skills:', error);
     });
+};
 
-    const isPostingEmpty = computed(() => {
-      return Object.keys(postings.value).length === 0 && postings.value.constructor === Object;
+const fetchPostings = () => {
+  const queryParams = Object.entries(selectedScores.value)
+    .map(([key, value]) => `skill[${encodeURIComponent(key)}]=${encodeURIComponent(value)}`)
+    .join('&');
+
+  const endpoint = `/postings/search/skills?${queryParams}`;
+  axios.get(`${baseURL}${endpoint}`)
+    .then(response => {
+      postings.value = response.data.results;
+    })
+    .catch(error => {
+      console.error('Error fetching postings:', error);
     });
+};
 
-    onMounted(() => {
-      fetchSkills();
-    });
+const selectSkill = (slug: string, score: number) => {
+  if (selectedSkillsCount.value >= skillCountLimit) {
+    alert('You can only select up to 10 items from the skills box.');
+    return;
+  }
+  selectedScores.value[slug] = score;
+  selectedSkillsCount.value++;
+  fetchPostings();
+};
 
+const toggleSkillsView = (showAll: boolean) => {
+  showAllSkills.value = showAll;
+};
+
+const isSelected = (slug: string, score: number) => selectedScores.value[slug] === score;
+
+const displayedSkills = computed(() => {
+  const skillsArray = Object.values(skills.value);
+  return showAllSkills.value ? skillsArray : skillsArray.slice(0, 5);
+});
+
+const isPostingEmpty = computed(() => {
+  return Object.keys(postings.value).length === 0;
+});
+
+onMounted(() => {
+  fetchSkills();
+});
 </script>
 
 <style scoped>
-
     h4 {
       margin: 12px 0 12px 0;
     }
-
     .score {
       text-align: right;
     }
-
     .score span {
       border: 1px solid #aaa5a580;
       margin: 5px;
       padding: 5px 8px;
       border-radius: 7px;
       cursor: pointer;
-
     }
-  
     .score span.selected {
       background-color: lightblue;
     }
-  
     .card2 {
       margin-bottom: 10px;
       padding: 10px;
       box-shadow: 2px 2px 4px rgb(168 220 233 / 42%);
       text-align: left;
     }
-
     .skills-section {
       margin-bottom: 10px;
       padding: 20px;
       box-shadow: 2px 2px 4px rgb(168 220 233 / 42%);
       border: 1px solid #add8e68c;
     }
-
     .posting-skills-section {
       margin: 10px 0 10px 0;
     }
-  
     .posting-skills-section span {
       border: 1px solid #aaa5a580;
       padding: 5px 7px;
@@ -174,7 +160,6 @@ import { Posting } from '@/composables/Posting';
       margin: 5px;
       background: lightyellow;
     }
-  
     .posting-score {
       border: 1px solid gold;
       border-radius: 10px;
@@ -182,9 +167,7 @@ import { Posting } from '@/composables/Posting';
       padding: 3px 8px 3px 8px;
       float: right;
     }
-  
-    .show-all-skills-link,
-    .show-limited-skills-link {
+    .show-all-skills-link,.show-limited-skills-link {
       cursor: pointer;
       margin-top: 20px;
     }
@@ -192,5 +175,4 @@ import { Posting } from '@/composables/Posting';
       margin-top: 5%;
       margin-bottom: 5%;
     }
-
 </style> -->

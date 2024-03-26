@@ -1,11 +1,11 @@
-const { defineConfig } = require('@vue/cli-service');
-
-module.exports = defineConfig({
-  transpileDependencies: [
-    'axios',
-    'vue-awesome',
-    'lodash-es',
-  ]
-});
-
+module.exports = {
+  chainWebpack: config => {
+    config.module
+      .rule('typescript')
+      .test(/\.tsx?$/)
+      .use('ts-loader')
+      .loader('ts-loader')
+      .end()
+  }
+}
 
