@@ -93,6 +93,7 @@
 <script>
 
 import axios from 'axios';
+import { SkillsMockData } from './MockData/SkillsMockData';
 const skillCountLimit = 10;
 
 export default {
@@ -100,11 +101,11 @@ export default {
   data() {
     return {
       baseURL: process.env.VUE_APP_BASE_URL,
-      skills: {},
+      skills: SkillsMockData,
       posting: {},
       selectedScores: {},
       selectedSkillsCount: 0,
-      showAllSkills: false
+      showAllSkills: false,
     }
   },
 

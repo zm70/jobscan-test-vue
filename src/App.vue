@@ -18,7 +18,7 @@
 import HeaderSection from './components/partials/HeaderSection.vue'
 import FooterSection from './components/partials/FooterSection.vue'
 import WelcomeSection from './components/partials/WelcomeSection.vue'
-import JobPositions from './components/pages/JobPositions.vue'
+import JobPositions from './components/pages/JobPositionsTypeScript.vue'
 
 export default {
   name: 'App',
